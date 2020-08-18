@@ -25,6 +25,6 @@ v <- data.frame("type"=rep(c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD"), each=4
 
 
 p<-ggplot(v, aes(x=year, y=pollution, group=type)) + geom_line(aes(color=type))+geom_point(aes(color=type))
-p
+
              
              
