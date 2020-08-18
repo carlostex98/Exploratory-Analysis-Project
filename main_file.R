@@ -15,6 +15,8 @@ total_pollution <- c(sum(NEI[NEI$year==1999,6]),
 
 plot(year, total_pollution, type = "l", xlab = "year", ylab = "total pollution")
 
+dev.copy(png, file = "plot1.png")
+dev.off()
 
 
 

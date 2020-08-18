@@ -15,5 +15,8 @@ total_pollution2 <- c(sum(NEI[NEI$year=="1999" & NEI$fips==06037,6]),
                      sum(NEI[NEI$year=="2005" & NEI$fips==06037,6]), 
                      sum(NEI[NEI$year=="2008" & NEI$fips==06037,6]))
 
+par(mfrow=c(1,1))
 plot(year, total_pollution, type = "l", xlab = "year", ylab = "total pollution")
 plot(year, total_pollution2, type = "l", xlab = "year", ylab = "total pollution")
+dev.copy(png, file = "plot6.png",)
+dev.off()
