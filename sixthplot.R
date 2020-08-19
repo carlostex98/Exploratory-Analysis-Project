@@ -1,22 +1,22 @@
-NEI <- readRDS("summarySCC_PM25.rds")
+NEI_data <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
+mrg_data <- merge(NEI_data, SCC, by = "SCC")
 
+library(ggplot2)
 
-##building plot
-year <- c(1999, 2002, 2005, 2008)
-total_pollution <- c(sum(NEI[NEI$year=="1999" & NEI$fips==24510,6]), 
-                     sum(NEI[NEI$year=="2002" & NEI$fips==24510,6]), 
-                     sum(NEI[NEI$year=="2005" & NEI$fips==24510,6]), 
-                     sum(NEI[NEI$year=="2008" & NEI$fips==24510,6]))
+subNEI <- NEI_data[(NEI_data$fips=="24510"|NEI_data$fips=="06037") 
+                           & NEI_data$type=="ON-ROAD",  ]
 
-total_pollution2 <- c(sum(NEI[NEI$year=="1999" & NEI$fips==06037,6]), 
-                     sum(NEI[NEI$year=="2002" & NEI$fips==06037,6]), 
-                     sum(NEI[NEI$year=="2005" & NEI$fips==06037,6]), 
-                     sum(NEI[NEI$year=="2008" & NEI$fips==06037,6]))
+totalg <- aggregate(Emissions ~ year + fips, subNEI, sum)
+totalg$fips[totalg$fips == "24510"] <- "Baltimore"
+totalg$fips[totalg$fips == "06037"] <- "Los Angeles"
 
-par(mfrow=c(1,1))
-plot(year, total_pollution, type = "l", xlab = "year", ylab = "total pollution")
-plot(year, total_pollution2, type = "l", xlab = "year", ylab = "total pollution")
-dev.copy(png, file = "plot6.png",)
+png("plot6.png", width=1040, height=480)
+g <- ggplot(totalg, aes(factor(year), Emissions/1000))
+g <- g + facet_grid(. ~ fips) + geom_bar(stat = "identity") +
+  xlab("years") +
+  ylab(expression('Total PM2.5 Emissions-kilotons-')) +
+  ggtitle(expression('Total PM2.5 Emission motor Baltimore and Los Angeles'))
+print(g)
 dev.off()
